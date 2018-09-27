@@ -1,0 +1,15 @@
+sudo python WebAgentParser.py http://propriodirect.com philippa murray
+sudo python WebAgentParser.py http://propriodirect.com nathalie gauthier
+sudo python WebAgentParser.py http://propriodirect.com guillaume tremblay
+sudo python WebAgentParser.py http://propriodirect.com jean leroux
+sudo python WebAgentParser.py http://propriodirect.com charles-etienne gouger
+sudo python WebAgentParser.py http://propriodirect.com stefany lavigne
+sudo python WebAgentParser.py http://propriodirect.com denyse lalonde
+sudo python WebAgentParser.py http://propriodirect.com louise poisson
+sudo python WebAgentParser.py http://propriodirect.com patricia letourneau
+sudo python WebAgentParser.py http://propriodirect.com stephane lambert
+sudo python WebAgentParser.py http://propriodirect.com stephane patry
+sudo python WebAgentParser.py http://propriodirect.com caroline paquin
+sudo python WebAgentParser.py http://propriodirect.com stephanie lamarche
+sudo python WebAgentParser.py http://propriodirect.com eric dumoulin
+sudo python WebAgentParser.py http://propriodirect.com manon dufresne

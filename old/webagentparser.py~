@@ -1,0 +1,128 @@
+import urllib2 
+import time
+import sys
+
+from HTMLParser import HTMLParser  
+from FillAgentData import insert_inscription_to_db
+from FillAgentData import  insert_main_info_to_db
+
+class MyHTMLParser(HTMLParser):
+
+   def __init__(self):
+      print "enter init"
+      HTMLParser.__init__(self)
+      self.recording = 0 
+      self.flagItemPrice = 0
+      self.address = 0
+      self.count = 0
+      self.data = ""
+      self.img_user = ""
+      self.myarray = []
+      self.array_cnt = 0
+      self.phone = 0
+      self.strphone = ""
+      self.img_phone = ""
+
+   def handle_starttag(self, tag, attrs):
+		if tag == 'img':
+			self.address = 0
+			self.flagItemPrice = 0
+			for name, value in attrs:
+				if name == 'src':
+					if value.find("centris") > 0:
+						self.count += 1
+						self.data += (value + "|")
+					elif value.find("account") > 0:
+						self.img_user = value
+					elif value.find("phone") > 0:
+						self.img_phone = value
+		elif tag == 'p':
+			for name, value in attrs:
+				if name == 'class' and value == 'item-price': 
+					self.flagItemPrice = 1
+				elif name == 'class' and value == 'texte text-center':
+					if self.phone == 0:
+						self.phone = 1
+				elif name == 'class':
+					if self.address == 0:
+						self.address = 1
+
+   def handle_endtag(self, tag):
+		if tag == 'img':
+			self.recording -=1 
+			print "Encountered the end of a %s tag\n" % tag 
+		elif tag == 'p':
+			if self.address == 1: 
+				self.address = 0
+				self.data += "|" #delimiter between info....
+			if self.phone == 1:
+				self.phone = 0
+				self.strphone += "|" #delimiter between info....
+
+   def handle_charref(self, ch):
+	   if self.address == 1:
+			mychr = ""
+			mychr += chr(int(ch))
+			self.data += mychr
+
+   def handle_data(self, indata):
+		#print indata
+		#print indata.decode('utf8')
+		if self.flagItemPrice == 1:
+			self.data += indata.strip()
+			#print "agent Data=", self.data
+			strdata = self.data.split('|')
+			if len(strdata) == 4:
+				self.myarray.append([])
+				self.myarray[self.array_cnt].append(("http:" + strdata[0]).decode('utf8'))
+				self.myarray[self.array_cnt].append((strdata[1]).decode('utf8'))
+				self.myarray[self.array_cnt].append((strdata[2]).decode('utf8'))
+				self.myarray[self.array_cnt].append((strdata[3].replace("\xc2\xa0", " ")).decode('utf8'))
+				self.array_cnt+=1
+		
+			self.flagItemPrice = 0
+			self.address = 0
+			self.data = ""
+		elif self.phone == 1:
+			self.strphone += indata.strip()
+		else:
+			if self.address == 1:
+				self.data += (indata.strip())
+
+
+				
+
+if __name__ == '__main__':         
+
+	if len(sys.argv) < 3:
+		print "Missing Instance Parameters"
+		print "Example : script.py url name lastname" 
+		exit()
+
+	else:
+		print 'Number of arguments:', len(sys.argv), 'arguments.'
+		print 'Argument List:', str(sys.argv)
+	
+	url = sys.argv[1] #URL
+	name = sys.argv[2] #Agent-name
+	lastname =sys.argv[3] #Agent-name
+	
+	URLtoOpen = url + "/" + name + "-" + lastname + "/"
+	print URLtoOpen
+	p = MyHTMLParser()
+	f = urllib2.urlopen(URLtoOpen)
+	html = f.read()
+	p.feed(html)
+	for i in range(len(p.myarray)) :
+		p.myarray[i][1] = unicode(p.myarray[i][1])
+		#print p.myarray[i][1]
+	print p.img_phone
+	print p.strphone
+	
+	insert_inscription_to_db(name+"_"+lastname,p.myarray)
+	insert_main_info_to_db(p.img_user,name+"_"+lastname,p.img_phone,p.strphone.decode('utf8'),"","0",str(p.count))
+	p.close()
+			
+			
+			
+			
