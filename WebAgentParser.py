@@ -52,13 +52,15 @@ class MyHTMLParser(HTMLParser):
                     elif value.find("phone") > 0:
                         self.img_phone = self.urlprefix + value
                 
-        elif (tag == 'p' or tag == 'div' or tag == 'h4'):
+        elif (tag == 'p' or tag == 'div' or tag == 'h4' or tag == 'a'):
             for name, value in attrs:
                 # print "***********>" + name + " " + value
-                if name == 'class' and value == 'texte text-center':
-                                    if self.phone == 0:
-                                            self.phone = 1
-
+                if name == 'class' and value.find("phone_container") >= 0:
+                    if self.phone == 0:
+                         self.phone = 1
+                if name == "href" and self.phone == 1:
+                    self.phone = 2
+                    
                 if name == 'class' and value.find("_desktop") > 0: #check only desktop verison of the site
                     self.SiteToAnalyze = 1
                 if name == 'class' and value.find("_mobile") > 0 : 
@@ -76,7 +78,8 @@ class MyHTMLParser(HTMLParser):
                         # print "City -------->" + value
                         if self.city == 0:
                             self.city = 1
-
+        
+             
    def handle_endtag(self, tag):
 
         # print "end tag ----->" + tag
@@ -92,7 +95,7 @@ class MyHTMLParser(HTMLParser):
             if self.flagItemPrice == 1:
                 self.flagItemPrice = 0
                 self.data += "|"
-            if self.phone == 1:
+            if self.phone == 2:
                 self.phone = 0
                 self.strphone += "|"  # delimiter between info....
 
@@ -137,7 +140,7 @@ class MyHTMLParser(HTMLParser):
             if self.flagItemPrice == 1:
                 #print indata.strip()
                 self.data += (indata.strip())
-            if self.phone == 1:
+            if self.phone == 2:
                 #print indata.strip()
                 self.strphone += indata.strip()                
 
