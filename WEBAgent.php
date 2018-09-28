@@ -38,15 +38,18 @@
 			$param += 1; 
 		$row = $results->fetchArray();
 		$elements = explode("|", $row['phone']);
-		$phone_img = "<div class='image'><img src=".$row['imgphone']."></div>";
+		$phone_img = "<div class='image'><img src=".$row['imgphone']. " width='10%'>";
 		echo '<table>';
 		echo "<tr>";
 		echo "<td><img class='agentimg' src=" . $row['img'] . "></td>";
 		echo "<td>";
 		echo "<table>";
-		echo "<tr><td><table class='pretty'><tr><td>". $phone_img. "</td><td>" . $elements[0] . "</td></tr></table></td></tr>";
-		echo "<tr><td><table class='pretty'><tr><td>". $phone_img. "</td><td>" . $elements[1] ."</td></tr></table></td></tr>";
-		echo "<tr><td><table class='pretty'><tr><td>". $phone_img. "</td><td>" . $elements[2] ."</td></tr></table></td></tr>";
+		if ($elements[0] != '')
+			echo "<tr><td><table class='pretty'><tr><td>". $phone_img. "<div class='phone'>" .$elements[0]. "</div></div></td></tr></table></td></tr>"; //<td>" . $elements[0] . "</td></tr></table></td></tr>";
+		if ($elements[1] != '')
+			echo "<tr><td><table class='pretty'><tr><td>". $phone_img. "<div class='phone'>" .$elements[1]. "</div></div></td></tr></table></td></tr>"; //<td>" . $elements[1] ."</td></tr></table></td></tr>";
+		if ($elements[2] != '')
+			echo "<tr><td><table class='pretty'><tr><td>". $phone_img. "<div class='phone'>" .$elements[2]. "</div></div></td></tr></table></td></tr>"; //<td>" . $elements[2] ."</td></tr></table></td></tr>";
 		echo "</table>";
 		echo '</td>';
 		$logo = "<img class='newsize' src=logo_proprio_fr.png>";

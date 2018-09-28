@@ -88,3 +88,11 @@ table.pretty{
     position: relative;
     left: -130px;    
 }
+
+div.phone {
+    position: absolute;
+    left: 120px;
+    top: 5px;
+    font-size: 200%;
+    z-index: -1;
+}
