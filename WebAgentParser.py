@@ -2,6 +2,7 @@ import urllib2
 import time
 import sys
 import ssl
+import os
 
 from HTMLParser import HTMLParser  
 from FillAgentData import insert_inscription_to_db
@@ -162,8 +163,11 @@ if __name__ == '__main__':
     p = MyHTMLParser()
     p.agent_name = name
     p.agent_lastname = lastname
-    context = ssl._create_unverified_context() #do not check ssk certificate please :-)
-    f = urllib2.urlopen(URLtoOpen,context=context)
+    if os.name == 'nt': #in windows
+        context = ssl._create_unverified_context() #do not check ssk certificate please :-)
+        f = urllib2.urlopen(URLtoOpen,context=context)
+    else:
+        f = urllib2.urlopen(URLtoOpen)
     html = f.read()
     p.feed(html)
     for i in range(len(p.myarray)) :
